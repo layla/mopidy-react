@@ -1,19 +1,27 @@
+<<<<<<< HEAD
 import React from 'react';
 import {Well, Row, Col, Panel, Input, Glyphicon} from 'react-bootstrap';
 import {State} from 'react-router';
 import Sidebar from '../ui/Sidebar';
+import app from '../bootstrap';
 
 let Project = React.createClass({
   mixins: [State],
-
+  loadData(query) {
+    app.mopidy.then((mopidy) => {
+      mopidy.library.search({ any: [query] })
+        .then((results) => this.setState({results}));
+    });
+  },
   search(e) {
+    // debounce search
     if (this.timer) {
       clearTimeout(this.timer);
     }
 
-    var value = e.target.value;
+    var query = e.target.value;
     this.timer = setTimeout(() => {
-      console.log('searching', value);
+      this.loadData(query);
     }, 1000);
   },
 
@@ -31,11 +39,13 @@ let Project = React.createClass({
             type="search"
             addonBefore={<Glyphicon glyph="search" />}
             onChange={this.search} />
-          <Well>Search!</Well>
+          <Well>
+            <pre>{JSON.stringify(this.state.results, undefined, 2)}</pre>
+          </Well>
         </Col>
       </Row>
     );
   }
 });
 
-export default Project;
+export default Search;
