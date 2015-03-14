@@ -9,7 +9,7 @@ let App = React.createClass({
     var params = this.getParams();
     var brand = (
       <div>
-        <Link to="dashboard"><Glyphicon glyph="home" /> mopidy</Link>
+        <Link to="dashboard"><Glyphicon glyph="home" /> officebox</Link>
       </div>
     );
     return (
