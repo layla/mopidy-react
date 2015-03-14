@@ -1,0 +1,22 @@
+$icon-font-path: "/fonts/bootstrap/";
+@import "variables";
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "bootswatch";
+@import url("CSS:./../../../node_modules/leaflet/dist/leaflet.css");
+
+body {
+  padding-top: 15px;
+}
+
+.navbar-brand { 
+  a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+    margin-top: -2px;
+  }
+
+  span {
+    margin-right: 5px;
+  }
+}
