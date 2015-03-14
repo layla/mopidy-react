@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from 'react';
 import {Well, Row, Col, Panel, Input, Glyphicon} from 'react-bootstrap';
 import {State} from 'react-router';
