@@ -1,8 +1,8 @@
-var React = require('react');
-var {RouteHandler, Link, State} = require('react-router');
-var {Navbar, Glyphicon} = require('react-bootstrap');
+import React from 'react';
+import {RouteHandler, Link, State} from 'react-router';
+import {Navbar, Glyphicon} from 'react-bootstrap';
 
-var App = React.createClass({
+let App = React.createClass({
   mixins: [State],
 
   render() {
@@ -24,4 +24,4 @@ var App = React.createClass({
   }
 });
 
-module.exports = App;
+export default App;

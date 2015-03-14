@@ -1,15 +1,15 @@
-var React = require('react');
-var _ = require('underscore');
-var {State} = require('react-router');
-var {Nav, NavItem, Glyphicon} = require('react-bootstrap');
-var {NavItemLink} = require('react-router-bootstrap');
+import React from 'react';
+import _ from 'underscore';
+import {State} from 'react-router';
+import {Nav, NavItem, Glyphicon} from 'react-bootstrap';
+import {NavItemLink} from 'react-router-bootstrap';
 
-var Sidebar = React.createClass({
+let Sidebar = React.createClass({
   mixins: [State],
 
   render() {
     var params = this.getParams();
-    
+
     return (
       <Nav bsStyle="pills" stacked={true} className="sidebar">
         <NavItemLink to='dashboard'><Glyphicon glyph="home" /></NavItemLink>
@@ -20,4 +20,4 @@ var Sidebar = React.createClass({
   }
 });
 
-module.exports = Sidebar;
+export default Sidebar;

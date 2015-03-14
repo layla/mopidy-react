@@ -1,9 +1,9 @@
-var React = require('react');
+import React from 'react';
 
-var {Well, Row, Col, Panel} = require('react-bootstrap');
-var Sidebar = require('../ui/Sidebar');
+import {Well, Row, Col, Panel} from 'react-bootstrap';
+import Sidebar from '../ui/Sidebar';
 
-var Dashboard = React.createClass({
+let Dashboard = React.createClass({
   render() {
     return (
       <Row>
@@ -20,4 +20,4 @@ var Dashboard = React.createClass({
   }
 });
 
-module.exports = Dashboard;
+export default Dashboard;

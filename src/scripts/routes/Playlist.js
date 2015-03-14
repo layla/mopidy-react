@@ -1,11 +1,11 @@
-var React = require('react');
-var {Well, Row, Col, Panel} = require('react-bootstrap');
-var {State} = require('react-router');
-var Sidebar = require('../ui/Sidebar');
+import React from 'react';
+import {Well, Row, Col, Panel} from 'react-bootstrap';
+import {State} from 'react-router';
+import Sidebar from '../ui/Sidebar';
 
-var Project = React.createClass({
+let Project = React.createClass({
   mixins: [State],
-  
+
   render() {
     var params = this.getParams();
     return (
@@ -23,4 +23,4 @@ var Project = React.createClass({
   }
 });
 
-module.exports = Project;
+export default Project;

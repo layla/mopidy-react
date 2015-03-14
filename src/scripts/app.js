@@ -1,8 +1,8 @@
 'use react';
 
-var React = require('react');
+import React from 'react';
 
-var Router = require('react-router');
+import Router from 'react-router';
 var Route = Router.Route;
 
 var routes = (
@@ -13,6 +13,4 @@ var routes = (
   </Route>
 );
 
-Router.run(routes, function (Handler) {
-  React.render(<Handler />, document.getElementById('app'));
-});
+Router.run(routes, (Handler) => React.render(<Handler />, document.getElementById('app')));

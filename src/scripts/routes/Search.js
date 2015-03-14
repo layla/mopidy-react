@@ -1,11 +1,11 @@
-var React = require('react');
-var {Well, Row, Col, Panel, Input, Glyphicon} = require('react-bootstrap');
-var {State} = require('react-router');
-var Sidebar = require('../ui/Sidebar');
+import React from 'react';
+import {Well, Row, Col, Panel, Input, Glyphicon} from 'react-bootstrap';
+import {State} from 'react-router';
+import Sidebar from '../ui/Sidebar';
 
-var Project = React.createClass({
+let Project = React.createClass({
   mixins: [State],
-  
+
   search(e) {
     if (this.timer) {
       clearTimeout(this.timer);
@@ -38,4 +38,4 @@ var Project = React.createClass({
   }
 });
 
-module.exports = Project;
+export default Project;
