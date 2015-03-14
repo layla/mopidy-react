@@ -1,19 +1,34 @@
 var React = require('react');
-var {Well, Row, Col, Panel, Input, Glyphicon} = require('react-bootstrap');
 var {State} = require('react-router');
+var {Well, Row, Col, Panel, Input, Glyphicon} = require('react-bootstrap');
 var Sidebar = require('../ui/Sidebar');
+var app = require('../bootstrap');
 
-var Project = React.createClass({
+var Search = React.createClass({
   mixins: [State],
   
+  getInitialState() {
+    return {
+      results: []
+    };
+  },
+
+  loadData(query) {
+    app.mopidy.then((mopidy) => {
+      mopidy.library.search({ any: [query] })
+        .then((results) => this.setState({results}));
+    });
+  },
+
   search(e) {
+    // debounce search
     if (this.timer) {
       clearTimeout(this.timer);
     }
 
-    var value = e.target.value;
+    var query = e.target.value;
     this.timer = setTimeout(() => {
-      console.log('searching', value);
+      this.loadData(query);
     }, 1000);
   },
 
@@ -31,11 +46,13 @@ var Project = React.createClass({
             type="search"
             addonBefore={<Glyphicon glyph="search" />}
             onChange={this.search} />
-          <Well>Search!</Well>
+          <Well>
+            <pre>{JSON.stringify(this.state.results, undefined, 2)}</pre>
+          </Well>
         </Col>
       </Row>
     );
   }
 });
 
-module.exports = Project;
+export default Search;
