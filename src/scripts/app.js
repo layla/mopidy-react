@@ -1,11 +1,10 @@
 'use react';
 
 import React from 'react';
-
 import Router from 'react-router';
-var Route = Router.Route;
+let Route = Router.Route;
 
-var routes = (
+let routes = (
   <Route name="root" path="/" handler={require('./ui/App')}>
     <Route name="dashboard" path="/" handler={require('./routes/Dashboard')} />
     <Route name="search" path="search" handler={require('./routes/Search')} />
