@@ -4,8 +4,13 @@ import {State} from 'react-router';
 import Sidebar from '../ui/Sidebar';
 import app from '../bootstrap';
 
-let Project = React.createClass({
+let Search = React.createClass({
   mixins: [State],
+  getInitialState() {
+    return {
+      results: []
+    };
+  },
   loadData(query) {
     app.mopidy.then((mopidy) => {
       mopidy.library.search({ any: [query] })
