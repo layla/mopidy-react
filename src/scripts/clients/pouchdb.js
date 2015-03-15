@@ -1,4 +1,6 @@
 import PouchDB from 'pouchdb';
+window.PouchDB = PouchDB;
+
 import BBPromise from 'bluebird';
 
 var PouchDBClient = {
