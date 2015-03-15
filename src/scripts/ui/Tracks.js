@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'underscore';
 import {Well, Row, Col, Panel, Glyphicon} from 'react-bootstrap';
+import fuzzy from 'fuzzy'
 import app from '../bootstrap';
 
 export default React.createClass({
@@ -29,7 +30,22 @@ export default React.createClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    this.loadData(nextProps.query);
+    this.replaceFilter('search', function (track) {
+      var searchString = [
+        'track:' + (track.name ? track.name : '-'),
+        'artist:' + (track.artists ? _.first(track.artists).name : '-'),
+        'album:' + (track.album.name ? track.album.name : '-'),
+        'date:' + (track.album.date ? track.album.date : '-')
+      ].join(' ');
+      
+      return fuzzy.test(nextProps.search || nextProps.query, searchString);
+    });
+
+    if (this.props.query !== nextProps.query) {
+      this.loadData(nextProps.query);
+    }
+
+    this.forceUpdate();
   },
 
   componentShouldUpdate(nextProps) {
@@ -58,7 +74,9 @@ export default React.createClass({
       let filterResults = _.map(this.filters, (filter) => {
         return filter.cb(track);
       });
+      console.log('filter results', filterResults);
       let passes = ! _.contains(filterResults, false);
+      console.log('passes', passes);
       return passes;
     });
   },
@@ -73,9 +91,13 @@ export default React.createClass({
     });
   },
 
+  replaceFilter(key, cb) {
+    this.removeFilter(key);
+    this.addFilter(key, cb);
+  },
+
   filterByProvider(provider) {
-    this.removeFilter('provider');
-    this.addFilter('provider', function (track) {
+    this.replaceFilter('provider', function (track) {
       return provider === 'all' || track.uri.split(':')[0] === provider;
     });
     this.forceUpdate();
@@ -100,9 +122,25 @@ export default React.createClass({
       background: 'rgba(0, 0, 0, 0.4)',
       zIndex: 2
     };
+    let provider = track.uri.split(':')[0];
+    let providerBsStyleMap = {
+      spotify: 'success',
+      soundcloud: 'warning',
+      youtube: 'danger',
+      gmusic: 'info'
+    };
+    let bsStyle = providerBsStyleMap[provider];
+    let providerLogoMap = {
+      spotify: 'http://www.brandsoftheworld.com/sites/default/files/styles/logo-thumbnail/public/092014/spotify_2014_0.png',
+      soundcloud: 'http://icons.iconarchive.com/icons/danleech/simple/128/soundcloud-icon.png',
+      youtube: 'http://media.idownloadblog.com/wp-content/uploads/2014/08/YouTube-2.9-for-iOS-app-icon-small.png',
+      gmusic: 'http://media.idownloadblog.com/wp-content/uploads/2014/10/Google-Play-Music-1.5.3184-for-iOS-app-icon-small.png'
+    };
+    let providerLogo = providerLogoMap[provider];
+    let header = (<div><img src={providerLogo} height={20} /> &nbsp; {track.name}</div>);
 
     return (
-      <Panel bsStyle="primary" header={track.name} style={panelStyle}>
+      <Panel bsStyle={bsStyle} header={header} style={panelStyle}>
         <Row>
           <Col md={6} sm={12}>
             <img src={imageUrl} style={{minWidth: 150, maxWidth: 300, width: '100%'}} />

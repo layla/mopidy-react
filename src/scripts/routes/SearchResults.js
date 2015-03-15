@@ -8,13 +8,24 @@ import app from '../bootstrap';
 let SearchResults = React.createClass({
   mixins: [State],
 
+  getInitialState() {
+    return {
+      search: null
+    };
+  },
+
+  updateSearch(e) {
+    this.setState({
+      search: e.target.value
+    });
+  },
+
   render() {
     let params = this.getParams();
-
     return (
       <Well>
-        <SearchBox />
-        { params.query ? <Tracks query={params.query} /> : '' }
+        <SearchBox value={this.state.search} onChange={this.updateSearch} />
+        { params.query ? <Tracks query={params.query} search={this.state.search} /> : '' }
       </Well>
     );
   }

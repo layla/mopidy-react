@@ -14,11 +14,11 @@ $gray:                   #666;
 $gray-light:             #bbb;
 $gray-lighter:           lighten($gray-base, 93.5%); // #eee
 
-$brand-primary:         #2196F3;
-$brand-success:         #4CAF50;
-$brand-info:            #9C27B0;
-$brand-warning:         #ff9800;
-$brand-danger:          #e51c23;
+$brand-primary:         #000000;
+$brand-success:         #6AE368;
+$brand-info:            #fb8521;
+$brand-warning:         #ff6600;
+$brand-danger:          #c4302b;
 
 
 //== Scaffolding
@@ -486,20 +486,20 @@ $jumbotron-font-size:            ceil(($font-size-base * 1.5));
 //
 //## Define colors for form feedback states and, by default, alerts.
 
-$state-success-text:             $brand-success;
-$state-success-bg:               #dff0d8;
+$state-success-text:             #fff;
+$state-success-bg:               $brand-success;
 $state-success-border:           darken(adjust-hue($state-success-bg, -10), 5%);
 
-$state-info-text:                $brand-info;
-$state-info-bg:                  #e1bee7;
+$state-info-text:                #fff;
+$state-info-bg:                  $brand-info;
 $state-info-border:              darken(adjust-hue($state-info-bg, -10), 7%);
 
-$state-warning-text:             $brand-warning;
-$state-warning-bg:               #ffe0b2;
+$state-warning-text:             #fff;
+$state-warning-bg:               $brand-warning;
 $state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%);
 
-$state-danger-text:              $brand-danger;
-$state-danger-bg:                #f9bdbb;
+$state-danger-text:              #fff;
+$state-danger-bg:                $brand-danger;
 $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%);
 
 

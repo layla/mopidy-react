@@ -17,7 +17,8 @@ let SearchBox = React.createClass({
       <Input
         ref="search"
         type="search"
-        value={params.query || ''}
+        value={this.props.value || (params.query || '')}
+        onChange={this.props.onChange || noop}
         addonAfter={<button className="btn btn-primary" onClick={this.search}><Glyphicon glyph="search" /></button>} />
     );
   }
