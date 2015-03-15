@@ -25,15 +25,6 @@ let SearchResults = React.createClass({
     }
   },
 
-  componentDidMount() {
-    let params = this.getParams();
-    console.log('SearchResults.componentDidMount', params);
-    if (params.query) {
-      console.log('SEARCH', this.state.search);
-      this.loadData(params.query);
-    }
-  },
-
   loadData(query) {
     console.log('SearchResults.loadData', query);
     this.setState({
@@ -72,7 +63,22 @@ let SearchResults = React.createClass({
     console.log('SearchResults.render', this.state.tracks.length);
     return (
       <Well>
-        <SearchBox value={this.state.search} onChange={this.updateSearch} onSearch={this.loadData} />
+        { this.state.search && this.state.tracks.length > 0 ? 'Fuzzy search in "' + params.query + '" results.' : ''}
+        <SearchBox value={this.state.search} onChange={this.updateSearch} />
+        { this.state.search ? (
+          <div>
+            { this.state.search !== params.query ? (
+            <div>
+              Click the search button to load new results for query "{ this.state.search }"
+            </div>
+            ) : '' }
+          </div>
+        ) : (
+          <div>
+            Start typing a query and hit the search button.
+          </div>
+        ) }
+        <br />
         { this.state.loading ? (
           <Well>
             <center>
@@ -81,9 +87,9 @@ let SearchResults = React.createClass({
               Hang in there, this might take a while...
             </center>
           </Well>
-        ) : (
+        ) : (this.state.tracks.length > 0 ? (
           <FilterableTracks tracks={this.state.tracks} search={this.state.search}  />
-        ) }
+        ) : '') }
       </Well>
     );
   }
