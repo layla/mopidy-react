@@ -13,8 +13,8 @@ let Sidebar = React.createClass({
     return (
       <Nav bsStyle="pills" stacked={true} className="sidebar">
         <NavItemLink to='dashboard'><Glyphicon glyph="home" /></NavItemLink>
-        <NavItemLink to='search'>Search</NavItemLink>
-        <NavItemLink to='playlist'>Playlist</NavItemLink>
+        <NavItemLink to='search'><Glyphicon glyph="search" /> &nbsp; Search</NavItemLink>
+        <NavItemLink to='playlist'><Glyphicon glyph="th-list" /> &nbsp; Playlist</NavItemLink>
       </Nav>
     );
   }
