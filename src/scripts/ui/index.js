@@ -3,5 +3,6 @@ export default {
   LastSearches: require('./LastSearches'),
   SearchBox: require('./SearchBox'),
   Sidebar: require('./Sidebar'),
-  Tracks: require('./Tracks')
+  Tracks: require('./Tracks'),
+  FilterableTracks: require('./FilterableTracks')
 }

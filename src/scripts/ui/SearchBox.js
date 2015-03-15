@@ -7,7 +7,12 @@ let SearchBox = React.createClass({
 
   search() {
     var query = this.refs.search.getValue();
-    this.transitionTo('search-results', { query });
+    
+    if (this.props.onSearch) {
+      return this.props.onSearch(query);
+    } else {
+      this.transitionTo('search-results', { query });
+    }
   },
 
   render() {
@@ -17,7 +22,7 @@ let SearchBox = React.createClass({
       <Input
         ref="search"
         type="search"
-        value={this.props.value || (params.query || '')}
+        defaultValue={this.props.value || (params.query || '')}
         onChange={this.props.onChange || noop}
         addonAfter={<button className="btn btn-primary" onClick={this.search}><Glyphicon glyph="search" /></button>} />
     );
