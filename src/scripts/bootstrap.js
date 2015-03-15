@@ -5,7 +5,6 @@ var app = new App({
   config: config
 });
 
-app.use(require('./clients/level'), true);
 app.use(require('./clients/mopidy'), true);
 app.use(require('./clients/pouchdb'), true);
 app.use(require('./services/mopidy'), true);
