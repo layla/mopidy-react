@@ -3,7 +3,7 @@ import {Well, Row, Col, Panel} from 'react-bootstrap';
 import {State} from 'react-router';
 import {Sidebar} from '../ui';
 
-let Project = React.createClass({
+let Playlist = React.createClass({
   mixins: [State],
 
   render() {
@@ -11,7 +11,7 @@ let Project = React.createClass({
     return (
       <Row>
         <Col lg={3} md={4} sm={4} xs={12}>
-          <Panel bsStyle="primary">
+          <Panel bsStyle="primary" header="Menu">
             <Sidebar />
           </Panel>
         </Col>
@@ -23,4 +23,4 @@ let Project = React.createClass({
   }
 });
 
-export default Project;
+export default Playlist;
