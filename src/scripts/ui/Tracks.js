@@ -1,35 +1,84 @@
 import React from 'react';
 import _ from 'underscore';
 import {Well, Row, Col, Panel, Glyphicon} from 'react-bootstrap';
+import app from '../bootstrap';
 
 export default React.createClass({
+  propTypes: {
+    query: React.PropTypes.string
+  },
+
   getInitialState() {
     return {
-      filters: []
+      loading: false,
+      tracks: []
     }
+  },
+
+  componentWillMount() {
+    this.filters = [
+      {
+        key: 'provider',
+        cb: (item) => true
+      }
+    ];
+  },
+
+  componentDidMount() {
+    this.loadData(this.props.query);
+  },
+
+  componentWillReceiveProps(nextProps) {
+    this.loadData(nextProps.query);
+  },
+
+  componentShouldUpdate(nextProps) {
+    return this.props.query !== nextProps.query;
+  },
+
+  loadData(query) {
+    this.setState({
+      loading: true
+    });
+
+    app.get('services.mopidy')
+      .then((mopidy) => {
+        return mopidy.search(query);
+      })
+      .then((tracks) => {
+        this.setState({
+          tracks: tracks,
+          loading: false
+        });
+      });
   },
 
   getTracks() {
-    var tracks;
-    while ( this.state.filters.length > 0 ) {
-      tracks = _.filter(this.props.tracks, this.state.filters.pop().cb);
-    }
-    return tracks;
+    return _.filter(this.state.tracks, (track) => {
+      let filterResults = _.map(this.filters, (filter) => {
+        return filter.cb(track);
+      });
+      let passes = ! _.contains(filterResults, false);
+      return passes;
+    });
   },
 
   addFilter(key, cb) {
-    var filters = this.state.filters;
-    filters.push({key, cb});
-    this.setState({ filters });
+    this.filters.push({key, cb});
   },
 
   removeFilter(key) {
-    var newFilters = _.filter(this.state.filters, (filter) => {
+    this.filters = _.filter(this.filters, (filter) => {
       return filter.key !== key;
     });
-    this.setState({
-      filters: newFilters
+  },
+
+  filterByProvider(provider) {
+    this.removeFilter('provider');
+    this.addFilter('provider', function (track) {
+      return provider === 'all' || track.uri.split(':')[0] === provider;
     });
+    this.forceUpdate();
   },
 
   renderTrack(track) {
@@ -64,7 +113,7 @@ export default React.createClass({
                 <th>Track no.</th><td>{track.track_no}</td>
               </tr>
               <tr>
-                <th>Artist</th><td>{_.first(track.artists).name}</td>
+                <th>Artist</th><td>{track.artists ? _.first(track.artists).name : '-'}</td>
               </tr>
               <tr>
                 <th>Album</th><td>{track.album.name}</td>
@@ -79,22 +128,29 @@ export default React.createClass({
     );
   },
 
-  filterProvider(provider) {
-    this.removeFilter('provider');
-    this.addFilter('provider', function (track) {
-      return track.uri.split(':')[0] === provider;
-    });
-  },
-
   render() {
-    return (
+    let tracks = this.getTracks();
+
+    return this.state.loading ? (
+      <Well>
+        <center>
+          <span className="glyphicon glyphicon-refresh spinning" style={{fontSize: 40}}></span><br />
+          <br />
+          Hang in there, this might take a while...
+        </center>
+      </Well>
+    ) : (
       <div>
-        <a onClick={this.filterProvider.bind(this, 'spotify')}>spotify</a>
-        <a onClick={this.filterProvider.bind(this, 'youtube')}>youtube</a>
-        <a onClick={this.filterProvider.bind(this, 'soundcloud')}>soundcloud</a>
+        <a onClick={this.filterByProvider.bind(this, 'all')}>all</a> &nbsp; 
+        <a onClick={this.filterByProvider.bind(this, 'spotify')}>spotify</a> &nbsp; 
+        <a onClick={this.filterByProvider.bind(this, 'youtube')}>youtube</a> &nbsp; 
+        <a onClick={this.filterByProvider.bind(this, 'soundcloud')}>soundcloud</a> &nbsp; 
+        <a onClick={this.filterByProvider.bind(this, 'gmusic')}>gmusic</a>
+        { tracks.length > 0 ? (
         <Well>
-          {_.map(this.getTracks(), (track) => this.renderTrack(track))}
+          {_.map(tracks, (track) => this.renderTrack(track))}
         </Well>
+        ) : '' }
       </div>
     );
   }
