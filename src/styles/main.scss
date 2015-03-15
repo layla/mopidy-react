@@ -4,10 +4,6 @@ $icon-font-path: "/fonts/bootstrap/";
 @import "bootswatch";
 @import url("CSS:./../../../node_modules/leaflet/dist/leaflet.css");
 
-body {
-  padding-top: 15px;
-}
-
 .navbar-brand { 
   a {
     color: #fff;
