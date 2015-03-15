@@ -7,12 +7,7 @@ let SearchBox = React.createClass({
 
   search() {
     var query = this.refs.search.getValue();
-    
-    if (this.props.onSearch) {
-      return this.props.onSearch(query);
-    } else {
-      this.transitionTo('search-results', { query });
-    }
+    this.transitionTo('search-results', { query });
   },
 
   render() {
