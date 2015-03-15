@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Well, Row, Col, Panel} from 'react-bootstrap';
-import Sidebar from '../ui/Sidebar';
+import {Sidebar} from '../ui';
 
 let Dashboard = React.createClass({
   render() {

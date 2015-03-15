@@ -1,7 +1,7 @@
 import React from 'react';
 import {Well, Row, Col, Panel} from 'react-bootstrap';
 import {State} from 'react-router';
-import Sidebar from '../ui/Sidebar';
+import {Sidebar} from '../ui';
 
 let Project = React.createClass({
   mixins: [State],

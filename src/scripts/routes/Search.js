@@ -1,9 +1,8 @@
 import React from 'react';
 import _ from 'underscore';
 import {Well, Row, Col, Panel, Input, Glyphicon} from 'react-bootstrap';
-import {State} from 'react-router';
-import Sidebar from '../ui/Sidebar';
-import Tracks from '../ui/Tracks';
+import {State, RouteHandler} from 'react-router';
+import {Sidebar, LastSearches, Tracks} from '../ui';
 import app from '../bootstrap';
 
 let Search = React.createClass({
@@ -11,61 +10,33 @@ let Search = React.createClass({
 
   getInitialState() {
     return {
-      tracks: []
+      lastSearches: []
     };
   },
 
-  searchResultsToTracks(searchResults) {
-    var tracks = _.reduce(searchResults, (memo, searchResult, index) => {
-      return memo.concat(searchResult.tracks || []);
-    }, []);
-    return tracks;
-  },
-
-  loadData(query) {
-    this.setState({ loading: true });
-    app.get('services.mopidy')
-      .then((mopidy) => {
-        mopidy.library.search({ any: [query] })
-          .then((searchResults) => {
-            let tracks = this.searchResultsToTracks(searchResults);
-            this.setState({
-              tracks: tracks,
-              loading: false
-            });
-          });
-      });
-  },
-
-  search() {
-    var query = this.refs.search.getValue();
-    this.loadData(query);
+  componentDidMount() {
+    app.get('services.storage')
+      .then((storageService) => {
+        return storageService.getLastSearches();
+      })
+      .then((lastSearches) => {
+        this.setState({ lastSearches });
+      })
   },
 
   render() {
-    var params = this.getParams();
     return (
       <Row>
         <Col lg={3} md={4} sm={4} xs={12}>
-          <Panel bsStyle="primary">
+          <Panel bsStyle="primary" header="Menu">
             <Sidebar />
+          </Panel>
+          <Panel bsStyle="primary" header="Last 5 searches">
+            <LastSearches searches={this.state.lastSearches} />
           </Panel>
         </Col>
         <Col lg={9} md={8} sm={8} xs={12}>
-          { this.state.loading ? (
-            <Well>
-              <center>
-                <span className="glyphicon glyphicon-refresh spinning" style={{fontSize: 40}}></span><br />
-                <br />
-                Hang in there, this might take a while...
-              </center>
-            </Well>
-          ) : '' }
-          <Input
-            ref="search"
-            type="search"
-            addonAfter={<button className="btn btn-primary" onClick={this.search}><Glyphicon glyph="search" /></button>} />
-          <Tracks tracks={this.state.tracks} />
+          <RouteHandler />
         </Col>
       </Row>
     );
