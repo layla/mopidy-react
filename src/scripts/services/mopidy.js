@@ -8,6 +8,23 @@ class MopidyService {
     this.storageService = storageService;
   }
 
+  getPlayerData() {
+    return BBPromise.join(
+      this.mopidyClient.playback.getCurrentTrack(),
+      this.mopidyClient.playback.getMute(),
+      this.mopidyClient.playback.getState(),
+      this.mopidyClient.playback.getVolume(),
+      this.mopidyClient.playback.getTimePosition()
+    )
+    .spread((currentTrack, isMuted, state, volume, timePosition) => {
+      return {currentTrack, isMuted, state, volume, timePosition};
+    });
+  }
+
+  setVolume(volume) {
+    return this.mopidyClient.playback.setVolume(volume);
+  }
+
   search(query) {
     return this.mopidyClient.library.search({ any: [query] })
       .then((searchResults) => this.searchResultsToTracks(searchResults))
