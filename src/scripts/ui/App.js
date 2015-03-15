@@ -13,12 +13,15 @@ let App = React.createClass({
       </div>
     );
     return (
-      <div className="container-fluid">
+      <div>
         <Navbar
           inverse={true}
           brand={brand}
-          fluid={true} />
-        <RouteHandler {...this.props} />
+          fluid={true}
+          staticTop={true} />
+        <div className="container-fluid">
+          <RouteHandler {...this.props} />
+        </div>
       </div>
     );
   }
