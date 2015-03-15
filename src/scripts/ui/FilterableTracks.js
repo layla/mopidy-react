@@ -50,7 +50,7 @@ export default React.createClass({
           'track:' + (track.name ? track.name : '-'),
           'artist:' + (track.artists ? _.first(track.artists).name : '-'),
           'album:' + (track.album ? track.album.name : '-'),
-          'date:' + (track.album.date ? track.album.date : '-')
+          'date:' + (track.album ? track.album.date : '-')
         ].join(' ');
         
         return fuzzy.test(this.state.search, searchString);
