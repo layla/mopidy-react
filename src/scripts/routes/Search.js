@@ -17,11 +17,11 @@ let Search = React.createClass({
   componentDidMount() {
     app.get('services.storage')
       .then((storageService) => {
-        return storageService.getLastSearches();
+        return storageService.get('lastsearches');
       })
       .then((lastSearches) => {
         this.setState({ lastSearches });
-      })
+      });
   },
 
   render() {

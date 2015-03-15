@@ -5,27 +5,27 @@ class StorageService {
     this.storageClient = storageClient;
   }
 
-  getLastSearches() {
-    return this.storageClient.get('lastsearches')
+  get(key) {
+    return this.storageClient.get(key)
       .then((result) => {
-        return result.searches;
+        return result.value;
       })
       .catch((err) => {
-        return [];
+        return null;
       });
   }
 
-  setLastSearches(newSearches) {
-    return this.storageClient.get('lastsearches')
+  set(key, value) {
+    return this.storageClient.get(key)
       .then((result) => {
         return this.storageClient.put({
-          searches: newSearches
-        }, 'lastsearches', result._rev);
+          value: value
+        }, key, result._rev);
       })
       .catch((err) => {
         return this.storageClient.put({
-          searches: newSearches
-        }, 'lastsearches');
+          value: value
+        }, key);
       });
   }
 }

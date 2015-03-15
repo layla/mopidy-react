@@ -30,17 +30,17 @@ class MopidyService {
   }
 
   updateLastSearches(query) {
-    return this.storageService.getLastSearches()
+    return this.storageService.get('lastsearches')
       .then((lastSearches) => {
-        let newSearches = lastSearches;
-        let exists = _.contains(lastSearches, query);
-        if (lastSearches.length === 5 && ! exists) {
+        let newSearches = lastSearches || [];
+        let exists = _.contains(newSearches, query);
+        if (newSearches.length === 5 && ! exists) {
           newSearches.shift();
         }
         if ( ! exists) {
           newSearches.push(query);
         }
-        return this.storageService.setLastSearches(newSearches);
+        return this.storageService.set('lastsearches', newSearches);
       });
   }
 }
