@@ -25,6 +25,14 @@ class MopidyService {
     return this.mopidyClient.playback.setVolume(volume);
   }
 
+  getTracklist(start, end) {
+    return this.mopidyClient.tracklist.slice(start, end);
+  }
+
+  getPlaylists() {
+    return this.mopidyClient.playlists.getPlaylists();
+  }
+
   search(query) {
     return this.mopidyClient.library.search({ any: [query] })
       .then((searchResults) => this.searchResultsToTracks(searchResults))
