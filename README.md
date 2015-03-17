@@ -1,3 +1,3 @@
-# mopify-react
+# mopidy-react
 
 =)
