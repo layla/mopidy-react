@@ -1,0 +1,66 @@
+import React from 'react';
+import _ from 'underscore';
+import {Well, Row, Col, Panel} from 'react-bootstrap';
+import {State, RouteHandler} from 'react-router';
+import {Sidebar, FilterableTracks, SearchBox, PlaylistMenu} from '../ui';
+import app from '../bootstrap';
+
+let Playlists = React.createClass({
+  mixins: [State],
+
+
+  getInitialState() {
+    return {
+      loading: true,
+      playlists: []
+    };
+  },
+
+  componentWillMount() {
+    this.loadData();
+  },
+
+  loadData() {
+    this.setState({ loading: true });
+    app.get('services.mopidy')
+      .then((mopidyService) => {
+        return mopidyService.getPlaylists();
+      })
+      .then((playlists) => {
+        this.setState({
+          playlists: playlists,
+          loading: false
+        });
+      });
+  },
+  
+  render() {
+    return (
+      <Row>
+        <Col lg={3} md={4} sm={4} xs={12}>
+          <Panel bsStyle="primary" header="Menu">
+            <Sidebar />
+          </Panel>
+          <Panel bsStyle="primary" header="Playlists">
+            { this.state.loading ? (
+              <Well>
+                <center>
+                  <span className="glyphicon glyphicon-refresh spinning" style={{fontSize: 40}}></span><br />
+                  <br />
+                  Hang in there, this might take a while...
+                </center>
+              </Well>
+            ) : (
+              <PlaylistMenu playlists={this.state.playlists} />
+            ) }
+          </Panel>
+        </Col>
+        <Col lg={9} md={8} sm={8} xs={12}>
+          <RouteHandler />
+        </Col>
+      </Row>
+    );
+  }
+});
+
+export default Playlists;
