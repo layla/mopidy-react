@@ -15,12 +15,29 @@ let Search = React.createClass({
   },
 
   componentDidMount() {
+    this.loadData();
+    this.listenToChanges();
+  },
+
+  loadData() {
     app.get('services.storage')
       .then((storageService) => {
         return storageService.get('lastsearches');
       })
       .then((lastSearches) => {
         this.setState({ lastSearches });
+      });
+  },
+
+  listenToChanges() {
+    app.get('clients.pouchdb')
+      .then((db) => {
+        db.changes()
+          .on('change', (change) => {
+            if (change.id === 'lastsearches') {
+              this.loadData();
+            }
+          });
       });
   },
 

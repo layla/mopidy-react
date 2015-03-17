@@ -88,7 +88,7 @@ let SearchResults = React.createClass({
             </center>
           </Well>
         ) : (this.state.tracks.length > 0 ? (
-          <FilterableTracks tracks={this.state.tracks} search={this.state.search}  />
+          <FilterableTracks tracks={this.state.tracks} search={this.state.search} />
         ) : '') }
       </Well>
     );
