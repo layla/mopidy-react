@@ -8,17 +8,96 @@ class MopidyService {
     this.storageService = storageService;
   }
 
-  getPlayerData() {
-    return BBPromise.join(
-      this.mopidyClient.playback.getCurrentTrack(),
-      this.mopidyClient.playback.getMute(),
-      this.mopidyClient.playback.getState(),
-      this.mopidyClient.playback.getVolume(),
-      this.mopidyClient.playback.getTimePosition()
-    )
-    .spread((currentTrack, isMuted, state, volume, timePosition) => {
-      return {currentTrack, isMuted, state, volume, timePosition};
-    });
+  getCurrentTrack() {
+    return this.mopidyClient.playback.getCurrentTrack();
+  }
+
+  getCurrentTlTrack() {
+    return this.mopidyClient.playback.getCurrentTlTrack();
+  }
+
+  getTlTracks() {
+    return this.mopidyClient.tracklist.getTlTracks();
+  }
+
+  getMute() {
+    return this.mopidyClient.playback.getMute();
+  }
+
+  setMute(isMuted) {
+    return this.mopidyClient.playback.setMute(isMuted);
+  }
+
+  getState() {
+    return this.mopidyClient.playback.getState();
+  }
+
+  getTimePosition() {
+    return this.mopidyClient.playback.getTimePosition();
+  }
+
+  play() {
+    return this.mopidyClient.playback.play();
+  }
+
+  pause() {
+    return this.mopidyClient.playback.pause();
+  }
+
+  previous() {
+    return this.mopidyClient.playback.previous();
+  }
+
+  next() {
+    return this.mopidyClient.playback.next();
+  }
+
+  queueNext(tracks) {
+    return this.getCurrentTlTrack()
+      .then((currentTlTrack) => {
+        if (currentTlTrack) {
+          return this.getTlTracks()
+            .then((tlTracks) => {
+              let tlIds = _.pluck(tlTracks, 'tlid');
+              let atPosition = tlIds.indexOf(currentTlTrack.tlid);
+              return this.mopidyClient.tracklist.add(tracks, atPosition + 1);   
+            });
+        }
+        return this.mopidyClient.tracklist.add(tracks, 0);
+      });
+  }
+
+  queueNextAndPlay(tracks) {
+    return this.queueNext(tracks)
+      .then(() => {
+        return this.next();
+      })
+      .then(() => {
+        return this.play();
+      });
+  }
+
+  queueLast(tracks) {
+    return this.mopidyClient.tracklist.add(tracks);
+  }
+
+  addToPlaylist(tracks, playlist) {
+    return;
+  }
+
+  seek(timePosition) {
+    console.log('send seek to client', timePosition);
+    return this.mopidyClient.playback.seek(timePosition)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  getVolume() {
+    return this.mopidyClient.playback.getVolume();
   }
 
   setVolume(volume) {
@@ -29,8 +108,12 @@ class MopidyService {
     return this.mopidyClient.tracklist.slice(start, end);
   }
 
-  getPlaylists() {
-    return this.mopidyClient.playlists.getPlaylists();
+  getPlaylists(loadTracks = false) {
+    return this.mopidyClient.playlists.getPlaylists(loadTracks);
+  }
+
+  getPlaylist(uri) {
+    return this.mopidyClient.playlists.lookup(uri);
   }
 
   search(query) {

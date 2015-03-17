@@ -9,7 +9,11 @@ var MopidyService = {
       var mopidy = new Mopidy({
         webSocketUrl: 'ws://' + app.config.mopidy.host + '/mopidy/ws/'
       });
-      mopidy.on(console.log.bind(console));
+      mopidy.on((a, msg) => {
+        msg && msg.method ?
+          console.log('<-', msg.method) :
+          (msg ? console.log('->', JSON.parse(msg.data)) : console.log('->', msg));
+      });
       mopidy.on('state:online', () => {
         resolve(mopidy);
       });
