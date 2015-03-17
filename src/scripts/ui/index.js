@@ -1,11 +1,16 @@
 export default {
+  Player: require('./controls/Player'),
+  VolumeSlider: require('./controls/VolumeSlider'),
+  PlaybackSlider: require('./controls/PlaybackSlider'),
+  MuteUnmute: require('./controls/MuteUnmute'),
+  Previous: require('./controls/Previous'),
+  Next: require('./controls/Next'),
   App: require('./App'),
+  FilterableTracks: require('./FilterableTracks'),
   LastSearches: require('./LastSearches'),
+  PlaylistMenu: require('./PlaylistMenu'),
   SearchBox: require('./SearchBox'),
   Sidebar: require('./Sidebar'),
-  Player: require('./controls/Player'),
-  Volume: require('./controls/Volume'),
-  Tracks: require('./Tracks'),
   Track: require('./Track'),
-  FilterableTracks: require('./FilterableTracks')
+  Tracks: require('./Tracks')
 }

@@ -33,7 +33,7 @@ export default React.createClass({
     return (
       <div>
         { this.state.tracks && this.state.tracks.length > 0 ? (
-          _.map(this.state.tracks, (track) => <Track track={track} />)
+          _.map(this.state.tracks, (track) => <Track key={track.uri} track={track} />)
         ) : '' }
       </div>
     );

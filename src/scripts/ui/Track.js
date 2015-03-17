@@ -1,12 +1,45 @@
 import React from 'react';
 import _ from 'underscore';
-import {Row, Col, Panel} from 'react-bootstrap';
+import {Glyphicon, Row, Col, Panel} from 'react-bootstrap';
+import app from '../bootstrap';
 
 let Track = React.createClass({
   getInitialState() {
     return {
       track: this.props.track
     };
+  },
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ track: nextProps.track });
+  },
+
+  play() {
+    app.get('services.mopidy')
+      .then((mopidyService) => {
+        return mopidyService.queueNextAndPlay([this.state.track]);
+      });
+  },
+
+  queueNext() {
+    app.get('services.mopidy')
+      .then((mopidyService) => {
+        return mopidyService.queueNext([this.state.track]);
+      });
+  },
+
+  queueLast() {
+    app.get('services.mopidy')
+      .then((mopidyService) => {
+        return mopidyService.queueLast([this.state.track]);
+      });
+  },
+
+  addToPlaylist() {
+    // app.get('services.mopidy')
+    //   .then((mopidyService) => {
+    //     return mopidyService.addToPlaylist(this.state.track, );
+    //   });
   },
 
   render() {
@@ -73,6 +106,18 @@ let Track = React.createClass({
             </table>
           </Col>
         </Row>
+        <button className="btn btn-primary" onClick={this.play}>
+          <Glyphicon glyph="play" /> <span className="btn-label">PLAY</span>
+        </button> &nbsp;
+        <button className="btn btn-primary" onClick={this.queueNext}>
+          <Glyphicon glyph="arrow-right" /> <span className="btn-label">PLAY NEXT</span>
+        </button> &nbsp;
+        <button className="btn btn-primary" onClick={this.queueLast}>
+          <Glyphicon glyph="time" /> <span className="btn-label">ADD TO QUEUE</span>
+        </button> &nbsp;
+        <button className="btn btn-primary" onClick={this.addToPlaylist}>
+          <Glyphicon glyph="bookmark" /> <span className="btn-label">ADD TO PLAYLIST</span>
+        </button>
       </Panel>
     );
   }

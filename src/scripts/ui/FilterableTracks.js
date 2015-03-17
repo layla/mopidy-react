@@ -47,14 +47,14 @@ export default React.createClass({
       if (this.state.search === null) {
         searchCheck = true;
       } else {
-        var haystack = [
+        let haystack = [
           'track:' + (track.name ? track.name : '-'),
           'artist:' + (track.artists ? _.first(track.artists).name : '-'),
           'album:' + (track.album ? track.album.name : '-'),
           'date:' + (track.album ? track.album.date : '-')
         ].join(' ');
         
-        var searchString = this.state.searchPrefix + this.state.search;
+        let searchString = this.state.searchPrefix + this.state.search;
         console.log('searching', searchString);
         searchCheck = fuzzy.test(searchString, haystack);
       }
