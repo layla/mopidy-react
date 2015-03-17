@@ -12,7 +12,11 @@ let routes = (
       <Route name="search-results" path="results/:query" handler={require('./routes/SearchResults')} />
       <DefaultRoute name="search-index" handler={require('./routes/SearchResults')} />
     </Route>
-    <Route name="playlist" path="playlist" handler={require('./routes/Playlist')} />
+    <Route name="playlists" path="playlists" handler={require('./routes/Playlists')}>
+      <Route name="playlist-detail" path="detail/:playlistUri" handler={require('./routes/PlaylistDetail')} />
+      <DefaultRoute name="playlist-index" handler={require('./routes/PlaylistIndex')} />
+    </Route>
+    <Route name="queue" path="queue" handler={require('./routes/Queue')} />
   </Route>
 );
 
