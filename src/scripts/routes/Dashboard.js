@@ -15,9 +15,7 @@ let Dashboard = React.createClass({
           </Panel>
         </Col>
         <Col lg={9} md={8} sm={8} xs={12}>
-          <Well>
-            <Player />
-          </Well>
+          <Player />
         </Col>
       </Row>
     );
