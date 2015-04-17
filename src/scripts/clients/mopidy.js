@@ -1,24 +1,31 @@
 import Mopidy from 'mopidy';
 import BBPromise from 'bluebird';
 
-var MopidyService = {
+/**
+ * @class clients.MopidyClient
+ */
+let MopidyClient = {
   attachKey: 'clients.mopidy',
 
-  attach: function (app) {
-    return new Promise((resolve) => {
+  attach: (app) => {
+    console.info('Attaching mopidy client...');
+    return new BBPromise((resolve) => {
       var mopidy = new Mopidy({
-        webSocketUrl: 'ws://' + app.config.mopidy.host + '/mopidy/ws/'
+        webSocketUrl: 'ws://' + app.config.mopidy.host + '/mopidy/ws/',
+        callingConvention: 'by-position-only'
       });
       mopidy.on((a, msg) => {
-        msg && msg.method ?
-          console.log('<-', msg.method) :
-          (msg ? console.log('->', JSON.parse(msg.data)) : console.log('->', msg));
+        console.log(msg);
+        // msg && msg.method ?
+        //   console.log('<-', msg.method) :
+        //   (msg ? console.log('->', JSON.parse(msg.data)) : console.log('->', msg));
       });
       mopidy.on('state:online', () => {
+        console.info('Attaching to mopidy client done...');
         resolve(mopidy);
       });
     });
   }
 };
 
-export default MopidyService;
+export default MopidyClient;

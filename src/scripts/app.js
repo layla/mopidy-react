@@ -1,9 +1,11 @@
 'use react';
 
 import React from 'react';
+import BBPromise from 'bluebird';
 import Router from 'react-router';
 let Route = Router.Route;
 let DefaultRoute = Router.DefaultRoute;
+import app from './bootstrap';
 
 let routes = (
   <Route name="root" path="/" handler={require('./ui/App')}>
@@ -20,4 +22,11 @@ let routes = (
   </Route>
 );
 
-Router.run(routes, (Handler) => React.render(<Handler />, document.getElementById('app')));
+console.info('Starting router...');
+BBPromise.all(app.setup())
+  .then(() => {
+    console.info('Mopidy client is ready...');
+    Router.run(routes, (Handler) => {
+      React.render(<Handler />, document.getElementById('app'));
+    });
+  });

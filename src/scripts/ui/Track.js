@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'underscore';
-import {Glyphicon, Row, Col, Panel} from 'react-bootstrap';
+import {Glyphicon, Row, Col, Panel, ButtonToolbar, ButtonGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import app from '../bootstrap';
 
 let Track = React.createClass({
@@ -44,27 +44,18 @@ let Track = React.createClass({
 
   render() {
     let track = this.state.track;
-    if ( ! track) {
+    if (!track) {
       return <div />;
     }
-    
+
     let images = track.album ? (track.album.images || []) : [];
     let imageUrl = _.first(_.filter(images, (image) => {
       // filter out trash
-      return image !== "";
+      return image !== '';
     }));
     let panelStyle = {
       position: 'relative',
       zIndex: 1
-    };
-    let bgStyle = {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.4)',
-      zIndex: 2
     };
     let provider = track.uri.split(':')[0];
     let providerBsStyleMap = {
@@ -82,6 +73,9 @@ let Track = React.createClass({
     };
     let providerLogo = providerLogoMap[provider];
     let header = (<div><img src={providerLogo} height={20} /> &nbsp; {track.name}</div>);
+    if (provider === 'youtube') {
+      header = (<div><img src={providerLogo} height={20} /> &nbsp; <a target="_blank" href={'https://www.youtube.com/watch?v=' + track.comment}>{track.name}</a></div>);
+    }
 
     return (
       <Panel bsStyle={bsStyle} header={header} style={panelStyle}>
@@ -104,20 +98,30 @@ let Track = React.createClass({
                 <th>Date</th><td>{track.date || '-'}</td>
               </tr>
             </table>
+            <ButtonToolbar>
+              <OverlayTrigger placement="bottom" overlay={<Tooltip>Play now</Tooltip>}>
+                <button className="btn btn-primary" onClick={this.play}>
+                  <Glyphicon glyph="play" />
+                </button>
+              </OverlayTrigger>
+              <OverlayTrigger placement="bottom" overlay={<Tooltip>Play after the song that is now playing</Tooltip>}>
+                <button className="btn btn-primary" onClick={this.queueNext}>
+                  <Glyphicon glyph="arrow-right" />
+                </button>
+              </OverlayTrigger>
+              <OverlayTrigger placement="bottom" overlay={<Tooltip>Add song to the end of the queue</Tooltip>}>
+                <button className="btn btn-primary" onClick={this.queueLast}>
+                  <Glyphicon glyph="time" />
+                </button>
+              </OverlayTrigger>
+              {/*<OverlayTrigger placement="bottom" overlay={<Tooltip>Add song to one of your playlists</Tooltip>}>
+                <button className="btn btn-primary" onClick={this.addToPlaylist}>
+                  <Glyphicon glyph="bookmark" /> <span className="btn-label">ADD TO PLAYLIST</span>
+                </button>
+              </OverlayTrigger>*/}
+            </ButtonToolbar>
           </Col>
         </Row>
-        <button className="btn btn-primary" onClick={this.play}>
-          <Glyphicon glyph="play" /> <span className="btn-label">PLAY</span>
-        </button> &nbsp;
-        <button className="btn btn-primary" onClick={this.queueNext}>
-          <Glyphicon glyph="arrow-right" /> <span className="btn-label">PLAY NEXT</span>
-        </button> &nbsp;
-        <button className="btn btn-primary" onClick={this.queueLast}>
-          <Glyphicon glyph="time" /> <span className="btn-label">ADD TO QUEUE</span>
-        </button> &nbsp;
-        <button className="btn btn-primary" onClick={this.addToPlaylist}>
-          <Glyphicon glyph="bookmark" /> <span className="btn-label">ADD TO PLAYLIST</span>
-        </button>
       </Panel>
     );
   }

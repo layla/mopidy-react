@@ -1,40 +1,24 @@
 import React from 'react';
-import _ from 'underscore';
-import {Well, Row, Col, Panel} from 'react-bootstrap';
-import {State, RouteHandler} from 'react-router';
-import {Sidebar, FilterableTracks, SearchBox, PlaylistMenu} from '../ui';
-import app from '../bootstrap';
+import {connect} from 'reflux';
+import {Row, Col, Panel} from 'react-bootstrap';
+import {RouteHandler} from 'react-router';
+import {Sidebar, PlaylistMenu} from '../ui';
+import playlistActions from '../actions/playlistActions';
+import playlistCollectionStore from '../stores/playlistCollectionStore';
 
-let Playlists = React.createClass({
-  mixins: [State],
+const Playlists = React.createClass({
+  mixins: [
+    connect(playlistCollectionStore)
+  ],
 
-
-  getInitialState() {
-    return {
-      loading: true,
-      playlists: []
-    };
+  statics: {
+    willTransitionTo: () => {
+      playlistActions.getPlaylists();
+    }
   },
 
-  componentWillMount() {
-    this.loadData();
-  },
-
-  loadData() {
-    this.setState({ loading: true });
-    app.get('services.mopidy')
-      .then((mopidyService) => {
-        return mopidyService.getPlaylists();
-      })
-      .then((playlists) => {
-        this.setState({
-          playlists: playlists,
-          loading: false
-        });
-      });
-  },
-  
   render() {
+    console.log('Playlists.render', this.state);
     return (
       <Row>
         <Col lg={3} md={4} sm={4} xs={12}>
@@ -42,17 +26,7 @@ let Playlists = React.createClass({
             <Sidebar />
           </Panel>
           <Panel bsStyle="primary" header="Playlists">
-            { this.state.loading ? (
-              <Well>
-                <center>
-                  <span className="glyphicon glyphicon-refresh spinning" style={{fontSize: 40}}></span><br />
-                  <br />
-                  Hang in there, this might take a while...
-                </center>
-              </Well>
-            ) : (
-              <PlaylistMenu playlists={this.state.playlists} />
-            ) }
+            <PlaylistMenu playlists={this.state.items} loading={this.state.loading} />
           </Panel>
         </Col>
         <Col lg={9} md={8} sm={8} xs={12}>

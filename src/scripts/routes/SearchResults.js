@@ -1,12 +1,12 @@
 import React from 'react';
 import _ from 'underscore';
 import {Well, Input, Glyphicon} from 'react-bootstrap';
-import {State} from 'react-router';
-import {Sidebar, LastSearches, FilterableTracks, SearchBox} from '../ui';
+import {State, Navigation} from 'react-router';
+import {Sidebar, LastSearches, FilterableTracks} from '../ui';
 import app from '../bootstrap';
 
-let SearchResults = React.createClass({
-  mixins: [State],
+const SearchResults = React.createClass({
+  mixins: [State, Navigation],
 
   getInitialState() {
     let params = this.getParams();
@@ -44,53 +44,45 @@ let SearchResults = React.createClass({
       });
   },
 
-  updateSearch(e) {
-    // clear timeout for debounce
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-
-    let search = e.target.value;
-    this.timer = setTimeout(() => {
-      this.setState({
-        search: search
-      });
-    }, 1000);
+  search() {
+    let query = this.refs.search.getValue();
+    this.transitionTo('search-results', { query });
   },
 
   render() {
-    let params = this.getParams();
     console.log('SearchResults.render', this.state.tracks.length);
+    let searchButton = <button className="btn btn-primary" onClick={this.search}><Glyphicon glyph="search" /></button>;
+    // let params = this.getParams();
+    // let searchInfo = this.state.search ? (
+    //   <div>
+    //     { this.state.search !== params.query ? (
+    //     <div>
+    //       Click the search button to load new results for query "{ this.state.search }"
+    //     </div>
+    //     ) : '' }
+    //   </div>
+    // ) : (
+    //   <div>
+    //     Start typing a query and hit the search button.
+    //   </div>
+    // );
+
     return (
-      <Well>
-        { this.state.search && this.state.tracks.length > 0 ? 'Fuzzy search in "' + params.query + '" results.' : ''}
-        <SearchBox value={this.state.search} onChange={this.updateSearch} />
-        { this.state.search ? (
-          <div>
-            { this.state.search !== params.query ? (
-            <div>
-              Click the search button to load new results for query "{ this.state.search }"
-            </div>
-            ) : '' }
-          </div>
-        ) : (
-          <div>
-            Start typing a query and hit the search button.
-          </div>
-        ) }
-        <br />
+      <div>
+        <h3>SEARCH YOUR LIBRARY</h3>
+        <Input type="search" ref="search" defaultValue={this.state.search} addonAfter={searchButton} />
         { this.state.loading ? (
-          <Well>
-            <center>
-              <span className="glyphicon glyphicon-refresh spinning" style={{fontSize: 40}}></span><br />
-              <br />
-              Hang in there, this might take a while...
-            </center>
-          </Well>
+        <Well>
+          <center>
+            <span className="glyphicon glyphicon-refresh spinning" style={{fontSize: 40}}></span><br />
+            <br />
+            Hang in there, this might take a while...
+          </center>
+        </Well>
         ) : (this.state.tracks.length > 0 ? (
           <FilterableTracks tracks={this.state.tracks} search={this.state.search} />
         ) : '') }
-      </Well>
+      </div>
     );
   }
 });

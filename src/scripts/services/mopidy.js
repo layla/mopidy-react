@@ -2,7 +2,18 @@ import _ from 'underscore';
 import Mopidy from 'mopidy';
 import BBPromise from 'bluebird';
 
+/**
+ * MopidyService
+ *
+ * @class services.MopidyService
+ */
 class MopidyService {
+  /**
+   * constructor
+   *
+   * @param {clients.MopidyClient} mopidyClient
+   * @param {services.StorageService} storageService
+   */
   constructor(mopidyClient, storageService) {
     this.mopidyClient = mopidyClient;
     this.storageService = storageService;
@@ -17,7 +28,15 @@ class MopidyService {
   }
 
   getTlTracks() {
-    return this.mopidyClient.tracklist.getTlTracks();
+    return this.mopidyClient.tracklist.getTlTracks()
+      .then(function (tlTracks) {
+        // include tlid in track to be used as a unique identifier
+        // for an array of tracks that are plucked off a tlTracks array
+        return _.map(tlTracks, (tlTrack) => {
+          tlTrack.track.tlid = tlTrack.tlid;
+          return tlTrack;
+        });
+      });
   }
 
   getMute() {
@@ -60,7 +79,7 @@ class MopidyService {
             .then((tlTracks) => {
               let tlIds = _.pluck(tlTracks, 'tlid');
               let atPosition = tlIds.indexOf(currentTlTrack.tlid);
-              return this.mopidyClient.tracklist.add(tracks, atPosition + 1);   
+              return this.mopidyClient.tracklist.add(tracks, atPosition + 1);
             });
         }
         return this.mopidyClient.tracklist.add(tracks, 0);
@@ -86,14 +105,7 @@ class MopidyService {
   }
 
   seek(timePosition) {
-    console.log('send seek to client', timePosition);
-    return this.mopidyClient.playback.seek(timePosition)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    return this.mopidyClient.playback.seek(timePosition);
   }
 
   getVolume() {
@@ -119,6 +131,7 @@ class MopidyService {
   search(query) {
     return this.mopidyClient.library.search({ any: [query] })
       .then((searchResults) => this.searchResultsToTracks(searchResults))
+      .then((tracks) => this.hydrateImagesForTracks(tracks))
       .then((tracks) => {
         return BBPromise.join(
           tracks,
@@ -130,8 +143,36 @@ class MopidyService {
       });
   }
 
+  hydrateImagesForTracks(tracks) {
+    if (this.mopidyClient.library.getImages) {
+      let uris = _.pluck(tracks, 'uri');
+      return this.mopidyClient.library.getImages(uris)
+        .then((images) => {
+          return _.map(tracks, (track) => {
+            if (images[track.uri]) {
+              let image = _.first(_.filter(images[track.uri], (image) => {
+                return image.width === 300;
+              }));
+              // try to find an image in another size
+              if ( ! image) {
+                image = _.first(images[track.uri]);
+              }
+              if (image) {
+                if ( ! track.album) {
+                  track.album = {};
+                } 
+                track.album.images = [image.uri];
+              }
+            }
+            return track;
+          });
+        });
+    }
+    return tracks;
+  }
+
   searchResultsToTracks(searchResults) {
-    var tracks = _.reduce(searchResults, (memo, searchResult, index) => {
+    var tracks = _.reduce(searchResults, (memo, searchResult) => {
       return memo.concat(searchResult.tracks || []);
     }, []);
     return tracks;
@@ -142,10 +183,10 @@ class MopidyService {
       .then((lastSearches) => {
         let newSearches = lastSearches || [];
         let exists = _.contains(newSearches, query);
-        if (newSearches.length === 5 && ! exists) {
+        if (newSearches.length === 5 && !exists) {
           newSearches.shift();
         }
-        if ( ! exists) {
+        if (!exists) {
           newSearches.push(query);
         }
         return this.storageService.set('lastsearches', newSearches);

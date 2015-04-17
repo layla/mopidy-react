@@ -1,30 +1,26 @@
 import React from 'react';
 import _ from 'underscore';
-import {State} from 'react-router';
-import {Nav} from 'react-bootstrap';
+import {Nav, Well} from 'react-bootstrap';
 import {NavItemLink} from 'react-router-bootstrap';
 
 const PlaylistMenu = React.createClass({
-  mixins: [State],
 
-  getInitialState() {
-    return {
-      playlists: this.props.playlists || []
-    };
-  },
+  render() {
+    console.log('PlaylistMenu.render', this.props);
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      playlists: nextProps.playlists
-    });
-  },
-
-  render() {   
-    return (
+    return this.props.loading ? (
+      <Well>
+        <center>
+          <span className="glyphicon glyphicon-refresh spinning" style={{fontSize: 40}}></span><br />
+          <br />
+          Hang in there, this might take a while...
+        </center>
+      </Well>
+    ) : (
       <Nav bsStyle="pills" stacked={true} className="playlist-menu">
-      { _.map(this.state.playlists, (playlist) => {
+      { _.map(this.props.playlists, (playlist) => {
         return (
-          <NavItemLink to='playlist-detail' params={{playlistUri: playlist.uri}}>{playlist.name}</NavItemLink>
+          <NavItemLink key={playlist.uri} to='playlist-detail' params={{playlistUri: playlist.uri}}>{playlist.name}</NavItemLink>
         );
       }) }
       </Nav>

@@ -9,7 +9,6 @@ export default {
   FilterableTracks: require('./FilterableTracks'),
   LastSearches: require('./LastSearches'),
   PlaylistMenu: require('./PlaylistMenu'),
-  SearchBox: require('./SearchBox'),
   Sidebar: require('./Sidebar'),
   Track: require('./Track'),
   Tracks: require('./Tracks')

@@ -1,9 +1,7 @@
 import React from 'react';
 import _ from 'underscore';
-import {Well, Row, Col, Panel, Glyphicon} from 'react-bootstrap';
+import {Glyphicon, OverlayTrigger, Tooltip, ButtonToolbar, ButtonGroup, Button} from 'react-bootstrap';
 import Track from './Track';
-import fuzzy from 'fuzzy'
-import app from '../bootstrap';
 
 export default React.createClass({
   propTypes: {
@@ -33,7 +31,7 @@ export default React.createClass({
     return (
       <div>
         { this.state.tracks && this.state.tracks.length > 0 ? (
-          _.map(this.state.tracks, (track) => <Track key={track.uri} track={track} />)
+          _.map(this.state.tracks, (track) => <Track key={track.tlid || track.uri} track={track} />)
         ) : '' }
       </div>
     );

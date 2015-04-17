@@ -30,14 +30,12 @@ let Search = React.createClass({
   },
 
   listenToChanges() {
-    app.get('clients.pouchdb')
-      .then((db) => {
-        db.changes()
-          .on('change', (change) => {
-            if (change.id === 'lastsearches') {
-              this.loadData();
-            }
-          });
+    var db = app.get('clients.pouchdb');
+    db.changes()
+      .on('change', (change) => {
+        if (change.id === 'lastsearches') {
+          this.loadData();
+        }
       });
   },
 

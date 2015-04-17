@@ -9,5 +9,6 @@ app.use(require('./clients/mopidy'), true);
 app.use(require('./clients/pouchdb'), true);
 app.use(require('./services/mopidy'), true);
 app.use(require('./services/storage'), true);
+app.use(require('./handlers/playlistHandlers'), true);
 
 module.exports = app;

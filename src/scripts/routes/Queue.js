@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'underscore';
 import {Row, Col, Panel} from 'react-bootstrap';
 import {State} from 'react-router';
-import {Sidebar, Tracks} from '../ui';
+import {Sidebar, FilterableTracks} from '../ui';
 import app from '../bootstrap';
 
 let Queue = React.createClass({
@@ -28,7 +28,6 @@ let Queue = React.createClass({
   },
 
   render() {
-    var params = this.getParams();
     return (
       <Row>
         <Col lg={3} md={4} sm={4} xs={12}>
@@ -37,7 +36,7 @@ let Queue = React.createClass({
           </Panel>
         </Col>
         <Col lg={9} md={8} sm={8} xs={12}>
-          <Tracks tracks={this.state.tracks} />
+          <FilterableTracks tracks={this.state.tracks} />
         </Col>
       </Row>
     );

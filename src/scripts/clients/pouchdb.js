@@ -3,12 +3,17 @@ window.PouchDB = PouchDB;
 
 import BBPromise from 'bluebird';
 
-var PouchDBClient = {
+/**
+ * PouchDBClient
+ *
+ * @class clients.PouchDBClient
+ */
+let PouchDBClient = {
   attachKey: 'clients.pouchdb',
 
-  attach: function (app) {
+  attach: () => {
     return new PouchDB('officebox');
-  },
+  }
 };
 
 export default PouchDBClient;

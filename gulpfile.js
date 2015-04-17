@@ -1,13 +1,13 @@
 'use strict';
 
-var gulp       = require('gulp');
-var $          = require('gulp-load-plugins')();
-var sync       = $.sync(gulp).sync;
-var del        = require('del');
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var sync = $.sync(gulp).sync;
+var del = require('del');
 var browserify = require('browserify');
-var watchify   = require('watchify');
-var source     = require('vinyl-source-stream');
-var babelify   = require('babelify');
+var watchify = require('watchify');
+var source = require('vinyl-source-stream');
+var babelify = require('babelify');
 
 var bundler = {
   w: null,
@@ -32,6 +32,7 @@ var bundler = {
     );
   },
   bundle: function() {
+    console.log('Creating browserify bundle');
     return this.w && this.w.bundle()
       .on('error', $.util.log.bind($.util, 'Browserify Error'))
       .on('update', $.util.log.bind($.util, 'Browserify update'))
@@ -54,7 +55,8 @@ gulp.task('styles', function () {
     .on('error', $.util.log.bind($.util, 'Sass Error'))
     .pipe($.autoprefixer('last 1 version'))
     .pipe(gulp.dest('dist/styles'))
-    .pipe($.size());
+    .pipe($.size())
+    .pipe($.livereload());
 });
 
 
@@ -100,7 +102,8 @@ gulp.task('serve', function() {
   gulp.src('dist')
     .pipe($.webserver({
       livereload: true,
-      port: 4000
+      port: 4000,
+      host: '0.0.0.0'
     }));
 });
 
