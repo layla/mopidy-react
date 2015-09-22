@@ -51,7 +51,7 @@ var bundler = {
 gulp.task('styles', function () {
   return gulp.src('src/styles/main.scss')
     .pipe($.sass())
-    .pipe($.importCss())
+    // .pipe($.importCss())
     .on('error', $.util.log.bind($.util, 'Sass Error'))
     .pipe($.autoprefixer('last 1 version'))
     .pipe(gulp.dest('dist/styles'))

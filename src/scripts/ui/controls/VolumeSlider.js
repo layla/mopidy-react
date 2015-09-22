@@ -57,7 +57,8 @@ let VolumeSlider = React.createClass({
         min={0}
         max={100}
         value={Number(this.state.volume)}
-        onChange={this.setVolume} />
+        onChange={this.setVolume}
+        {...this.props} />
     );
   }
 });

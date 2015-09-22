@@ -41,7 +41,7 @@ let PlayPause = React.createClass({
     this.setState({
       isPlaying: shouldBePlaying
     });
-    
+
     app.get('services.mopidy')
       .then((mopidyService) => {
         if (shouldBePlaying) {
